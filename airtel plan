@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales & Customer Management</title>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; background:#f4f6f8; }
+    header { background:#0d6efd; color:white; padding:15px 20px; }
+    header h1 { margin:0; }
+    nav { background:#084298; padding:10px 20px; }
+    nav a { color:white; margin-right:15px; text-decoration:none; font-weight:bold; }
+    nav a:hover { text-decoration:underline; }
+    .container { padding:20px; }
+    .card { background:white; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:20px; }
+    h2 { margin-top:0; }
+    input, select, button { width:100%; max-width:350px; padding:10px; margin:8px 0; }
+    button { background:#0d6efd; color:white; border:none; border-radius:6px; cursor:pointer; }
+    button:hover { background:#084298; }
+    ul { list-style:none; padding:0; }
+    li { background:#fff; padding:12px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 0 5px rgba(0,0,0,0.1); }
+    .tag { font-size:12px; background:#e9ecef; padding:3px 8px; border-radius:5px; }
+    footer { text-align:center; padding:15px; background:#dee2e6; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Sales & Customer Management Site</h1>
+  <p>Simple CRM for Plans & Customers</p>
+</header>
+
+<nav>
+  <a href="#add">Add Entry</a>
+  <a href="#list">View Data</a>
+  <a href="#about">About</a>
+</nav>
+
+<div class="container">
+
+  <div class="card" id="add">
+    <h2>➕ New Plan / Customer Add Karein</h2>
+    <form id="form">
+      <label>Type</label>
+      <select id="type">
+        <option value="Plan">Plan</option>
+        <option value="Customer">Customer</option>
+      </select>
+
+      <label>Name</label>
+      <input type="text" id="name" placeholder="Plan ya Customer ka naam" required />
+
+      <label>Details</label>
+      <input type="text" id="details" placeholder="Price / Mobile / Notes" required />
+
+      <button type="submit">Save</button>
+    </form>
+  </div>
+
+  <div class="card" id="list">
+    <h2>📋 Saved Data</h2>
+    <ul id="listData"></ul>
+  </div>
+
+  <div class="card" id="about">
+    <h2>ℹ️ About This Site</h2>
+    <p>
+      Ye website small sales team ke liye banayi gayi hai jisme aap:
+      <br>• WiFi / Internet Plans save kar sakte ho
+      <br>• New Customers ka record rakh sakte ho
+      <br>• Data browser me safe rehta hai (LocalStorage)
+    </p>
+    <p><strong>Use Case:</strong> Airtel Engineer / Sales Person / Local ISP</p>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Sales Management | Made for Practice & Real Use
+</footer>
+
+<script>
+  const form = document.getElementById('form');
+  const listData = document.getElementById('listData');
+  let data = JSON.parse(localStorage.getItem('salesData')) || [];
+
+  function render() {
+    listData.innerHTML = '';
+    data.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div>
+          <strong>${item.name}</strong><br>
+          <span>${item.details}</span>
+        </div>
+        <div>
+          <span class="tag">${item.type}</span><br>
+          <button onclick="remove(${index})" style="background:#dc3545;margin-top:5px;">Delete</button>
+        </div>
+      `;
+      listData.appendChild(li);
+    });
+  }
+
+  function remove(index) {
+    data.splice(index, 1);
+    localStorage.setItem('salesData', JSON.stringify(data));
+    render();
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    data.push({
+      type: type.value,
+      name: name.value,
+      details: details.value
+    });
+    localStorage.setItem('salesData', JSON.stringify(data));
+    form.reset();
+    render();
+  });
+
+  render();
+</script>
+
+</body>
+</html>
+
